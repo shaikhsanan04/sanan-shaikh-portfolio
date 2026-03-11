@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sanan Shaikh — Data Scientist</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;transition:background 0.4s,color 0.4s}
+body.dark{background:#07090e;color:#dde8f0}
+body.light{background:#f0f4f8;color:#1a2535}
+body::-webkit-scrollbar{width:3px}
+body.dark::-webkit-scrollbar-track{background:#07090e}
+body.dark::-webkit-scrollbar-thumb{background:#2a3a4a}
+body.light::-webkit-scrollbar-track{background:#e0e8f0}
+body.light::-webkit-scrollbar-thumb{background:#a0b0c0}
+#root{min-height:100vh}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes spinr{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@media(max-width:640px){.desktop-links{display:none!important}.hamburger-btn{display:flex!important}.resume-nav-btn{display:none!important}}
+@media(min-width:641px){.hamburger-btn{display:none!important}}
+@media(max-width:900px){.hero-orb{display:none!important}}
+canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+</style>
+</head>
+<body class="dark">
+<canvas id="particles"></canvas>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const T = {
+  dark:{bg:"#07090e",bg2:"#0b0f17",card:"#0f1520",border:"#1a2535",accent:"#00c8f0",accent2:"rgba(0,200,240,0.1)",green:"#00e87a",text:"#dde8f0",muted:"#506070",muted2:"#2a3a4a",shadow:"rgba(0,0,0,0.5)",navBg:"rgba(7,9,14,0.93)",gridColor:"rgba(0,200,240,0.025)"},
+  light:{bg:"#f0f4f8",bg2:"#e4ecf4",card:"#ffffff",border:"#d0dce8",accent:"#0088bb",accent2:"rgba(0,136,187,0.08)",green:"#00a855",text:"#1a2535",muted:"#5a6e82",muted2:"#b0c0d0",shadow:"rgba(0,0,0,0.1)",navBg:"rgba(240,244,248,0.93)",gridColor:"rgba(0,136,187,0.04)"}
+};
+
+const skillsData=[
+  {icon:"🐍",title:"Languages & Libraries",tags:["Python","SQL","Pandas","NumPy","Matplotlib","Seaborn","Scikit-learn"],level:85},
+  {icon:"🤖",title:"Machine Learning",tags:["Regression","Classification","Clustering","Feature Engineering","Model Evaluation","EDA"],level:78},
+  {icon:"📊",title:"Data Science",tags:["Predictive Modeling","Statistical Analysis","Data Cleaning","Data Visualization","ROC-AUC"],level:80},
+  {icon:"🌐",title:"Web & Analytics",tags:["React.js","Google Analytics","GTmetrix","WordPress","Figma","SEO"],level:88},
+  {icon:"🛠️",title:"Environment & Tools",tags:["Jupyter Notebook","Google Colab","Git","GitHub","VS Code"],level:90},
+  {icon:"🗄️",title:"Databases",tags:["SQL Querying","Joins & Aggregation","Performance Analysis","Data Pipelines"],level:72},
+];
+
+const expData=[
+  {title:"Web Developer",company:"The Luxury Real Estate",location:"Dubai, UAE (Remote)",dates:"Jun 2024 – Jul 2025",
+   bullets:["Analyzed website traffic across <b>10,000+ monthly sessions</b> using Google Analytics, contributing to a <b>35% increase</b> in lead conversions.","Reduced page load times by <b>40%</b> using GTmetrix and Google PageSpeed Insights, improving mobile usability scores by <b>25+ points</b>.","Maintained <b>99.9% uptime</b> across 5+ active sites through proactive plugin audits and performance monitoring.","Improved average session duration by <b>15%</b> through data-driven mobile layout refinements."]},
+  {title:"React Developer & Web Designer",company:"Adal Agency",location:"Maharashtra, India",dates:"Jul 2023 – Feb 2024",
+   bullets:["Built <b>8+ responsive</b> React-based web applications, improving load performance by <b>30%</b>.","Translated Figma designs into structured UI components for <b>5+ client projects</b>.","Iterated on designs through <b>2-week cycles</b> based on usability and engagement metrics."]},
+  {title:"Desktop Support Engineer",company:"Dynacons Systems & Solutions Ltd.",location:"North Goa, India",dates:"Jul 2022 – May 2023",
+   bullets:["Supported cloud server environments for <b>50+ users</b> with avg. resolution under <b>2 hours</b>.","Resolved <b>100+ performance queries</b> and monitored server health across the project lifecycle.","Reduced recurring technical bottlenecks by <b>20%</b> through root-cause documentation."]},
+];
+
+const projectsData=[
+  {num:"01",title:"Mall Customer Segmentation",tech:"Python · Scikit-learn · KMeans · SciPy · Seaborn",desc:"Applied KMeans and Hierarchical Clustering on 200-customer dataset to identify 5 distinct market segments. Used Elbow Method and Silhouette Score (0.5547) to validate K, delivering targeted marketing recommendations.",badge:"Silhouette: 0.5547",isAccent:true,category:"ML"},
+  {num:"02",title:"Customer Churn Prediction",tech:"Python · Scikit-learn · Pandas · NumPy · Matplotlib",desc:"Built and compared 3+ classification models to predict telecom customer churn. Full pipeline: data cleaning, EDA, feature selection, and evaluation with Accuracy, Precision, Recall, and ROC-AUC.",badge:"ROC-AUC Evaluated",isAccent:false,category:"ML"},
+  {num:"03",title:"Ecommerce Sales Forecasting",tech:"Python · Scikit-learn · Pandas · Feature Engineering",desc:"Developed and benchmarked 4 regression models to forecast ecommerce revenue. Engineered 3 time-based features to capture seasonal patterns. Evaluated using MAE, RMSE, and R².",badge:"4 Models Benchmarked",isAccent:true,category:"EDA"},
+  {num:"04",title:"Walmart Sales EDA",tech:"Python · Pandas · NumPy · Matplotlib · Seaborn",desc:"Comprehensive EDA on Walmart dataset covering 45 stores and 3 years of weekly transactions. Produced 10+ visualizations uncovering seasonal trends, holiday impacts, and store performance variance.",badge:"45 Stores · 3 Years Data",isAccent:false,category:"EDA"},
+];
+
+const certsData=["Data Science Certification","Python for Machine Learning","Front End Development","AI Tools & ChatGPT Workshop"];
+
+function initParticles(dark){
+  const canvas=document.getElementById("particles");
+  if(!canvas)return;
+  const ctx=canvas.getContext("2d");
+  let W=canvas.width=window.innerWidth,H=canvas.height=window.innerHeight;
+  const count=Math.floor((W*H)/14000);
+  const col=dark?"rgba(0,200,240,":"rgba(0,136,187,";
+  const pts=Array.from({length:count},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.3,o:Math.random()*.4+.1}));
+  let raf;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=col+p.o+")";ctx.fill();});
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=col+(0.07*(1-d/100))+")";ctx.lineWidth=.5;ctx.stroke();}}
+    raf=requestAnimationFrame(draw);
+  }
+  draw();
+  const onR=()=>{W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;};
+  window.addEventListener("resize",onR);
+  return()=>{cancelAnimationFrame(raf);window.removeEventListener("resize",onR);};
+}
+
+function useInView(threshold=0.12){
+  const ref=useRef(null);const[vis,setVis]=useState(false);
+  useEffect(()=>{const obs=new IntersectionObserver(([e])=>{if(e.isIntersecting){setVis(true);obs.disconnect();}},{threshold});if(ref.current)obs.observe(ref.current);return()=>obs.disconnect();},[]);
+  return[ref,vis];
+}
+
+function useScrollSpy(){
+  const[active,setActive]=useState("");
+  useEffect(()=>{
+    const ids=["skills","experience","projects","contact"];
+    const h=()=>{let c="";ids.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-140)c=id;});setActive(c);};
+    window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h);
+  },[]);return active;
+}
+
+function useTypewriter(words,speed=80,pause=1800){
+  const[display,setDisplay]=useState("");const[wIdx,setWIdx]=useState(0);const[cIdx,setCIdx]=useState(0);const[deleting,setDeleting]=useState(false);
+  useEffect(()=>{
+    const cur=words[wIdx];
+    const t=setTimeout(()=>{
+      if(!deleting){setDisplay(cur.slice(0,cIdx+1));if(cIdx+1===cur.length)setTimeout(()=>setDeleting(true),pause);else setCIdx(c=>c+1);}
+      else{setDisplay(cur.slice(0,cIdx-1));if(cIdx-1===0){setDeleting(false);setWIdx(w=>(w+1)%words.length);setCIdx(0);}else setCIdx(c=>c-1);}
+    },deleting?speed/2:speed);
+    return()=>clearTimeout(t);
+  },[display,wIdx,cIdx,deleting]);
+  return display;
+}
+
+function SectionLabel({num,text,t}){
+  const[r,v]=useInView();
+  return <div ref={r} style={{display:"flex",alignItems:"center",gap:"0.7rem",fontFamily:"'DM Mono',monospace",fontSize:"0.68rem",color:t.accent,letterSpacing:"0.2em",textTransform:"uppercase",marginBottom:"0.7rem",opacity:v?1:0,transform:v?"translateY(0)":"translateY(16px)",transition:"opacity 0.6s,transform 0.6s"}}><span>{num} —</span><span>{text}</span><span style={{flex:1,maxWidth:50,height:1,background:t.accent,opacity:0.4}}/></div>;
+}
+function SectionTitle({children,t}){
+  const[r,v]=useInView();
+  return <h2 ref={r} style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:"clamp(1.8rem,4vw,2.7rem)",lineHeight:1.1,marginBottom:"2rem",color:t.text,opacity:v?1:0,transform:v?"translateY(0)":"translateY(18px)",transition:"opacity 0.6s 0.1s,transform 0.6s 0.1s"}}>{children}</h2>;
+}
+
+function Nav({t,dark,setDark}){
+  const active=useScrollSpy();const[scrolled,setScrolled]=useState(false);const[menuOpen,setMenuOpen]=useState(false);
+  useEffect(()=>{const h=()=>setScrolled(window.scrollY>50);window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h);},[]);
+  const links=[["skills","Skills"],["experience","Experience"],["projects","Projects"],["contact","Contact"]];
+  const scrollTo=id=>{document.getElementById(id)?.scrollIntoView({behavior:"smooth"});setMenuOpen(false);};
+  return <>
+    <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:300,height:60,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 clamp(1.2rem,5vw,4rem)",background:scrolled?t.navBg:"transparent",backdropFilter:scrolled?"blur(24px)":"none",borderBottom:scrolled?`1px solid ${t.border}`:"1px solid transparent",transition:"all 0.3s"}}>
+      <span style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:"1.1rem",color:t.accent,letterSpacing:"0.05em"}}>SS.</span>
+      <div style={{display:"flex",alignItems:"center",gap:"1rem"}}>
+        <ul className="desktop-links" style={{display:"flex",gap:"2rem",listStyle:"none"}}>
+          {links.map(([id,label])=><li key={id}><button onClick={()=>scrollTo(id)} style={{background:"none",border:"none",cursor:"pointer",fontFamily:"'DM Mono',monospace",fontSize:"0.7rem",color:active===id?t.accent:t.muted,letterSpacing:"0.12em",textTransform:"uppercase",padding:"4px 0",transition:"color 0.2s",borderBottom:active===id?`1px solid ${t.accent}`:"1px solid transparent"}}>{label}</button></li>)}
+        </ul>
+        <button onClick={()=>setDark(d=>!d)} style={{background:t.accent2,border:`1px solid ${t.border}`,borderRadius:20,padding:"0.28rem 0.6rem",cursor:"pointer",fontSize:"0.85rem",transition:"all 0.3s",color:t.accent}}>{dark?"☀️":"🌙"}</button>
+        <a className="resume-nav-btn" href="Sanan_Shaikh_DataScientist_Resume.pdf" download style={{display:"flex",alignItems:"center",gap:"0.35rem",background:t.accent,color:"#07090e",fontFamily:"'DM Mono',monospace",fontSize:"0.64rem",letterSpacing:"0.08em",textTransform:"uppercase",padding:"0.42rem 0.85rem",borderRadius:2,textDecoration:"none",transition:"opacity 0.2s",whiteSpace:"nowrap",fontWeight:500}}>↓ Resume</a>
+        <button className="hamburger-btn" onClick={()=>setMenuOpen(!menuOpen)} style={{background:"none",border:"none",cursor:"pointer",flexDirection:"column",gap:5,padding:4}}>
+          {[0,1,2].map(i=><span key={i} style={{display:"block",width:22,height:1.5,background:menuOpen&&i===1?"transparent":t.text,transition:"all 0.3s",transform:menuOpen?(i===0?"rotate(45deg) translate(4px,4px)":i===2?"rotate(-45deg) translate(4px,-4px)":"none"):"none"}}/>)}
+        </button>
+      </div>
+    </nav>
+    {menuOpen&&<div style={{position:"fixed",top:60,left:0,right:0,zIndex:299,background:t.navBg,backdropFilter:"blur(20px)",borderBottom:`1px solid ${t.border}`,padding:"1.5rem clamp(1.2rem,5vw,4rem)",display:"flex",flexDirection:"column"}}>
+      {links.map(([id,label])=><button key={id} onClick={()=>scrollTo(id)} style={{background:"none",border:"none",borderBottom:`1px solid ${t.border}`,cursor:"pointer",textAlign:"left",fontFamily:"'DM Mono',monospace",fontSize:"0.9rem",color:t.text,letterSpacing:"0.1em",textTransform:"uppercase",padding:"1rem 0"}}>{label}</button>)}
+      <a href="Sanan_Shaikh_DataScientist_Resume.pdf" download style={{marginTop:"1rem",textAlign:"center",background:t.accent,color:"#07090e",fontFamily:"'DM Mono',monospace",fontSize:"0.8rem",letterSpacing:"0.1em",textTransform:"uppercase",padding:"0.8rem",borderRadius:2,textDecoration:"none"}}>↓ Download Resume</a>
+    </div>}
+  </>;
+}
+
+function Hero({t}){
+  const typed=useTypewriter(["Data Scientist","ML Engineer","Python Developer","Data Analyst"]);
+  const floats=["KMeans · Clustering","ROC-AUC · 0.92","Pandas · NumPy","Scikit-learn","EDA · Insights"];
+  const pos=[{top:"10%",left:"2%"},{top:"26%",right:"0%"},{bottom:"30%",left:"0%"},{bottom:"12%",right:"3%"},{top:"50%",left:"5%"}];
+  return <section style={{minHeight:"100vh",display:"flex",alignItems:"center",padding:"8rem clamp(1.2rem,5vw,4rem) 4rem",maxWidth:1200,margin:"0 auto",position:"relative",zIndex:1}}>
+    <div style={{position:"fixed",inset:0,zIndex:-1,backgroundImage:`linear-gradient(${t.gridColor} 1px,transparent 1px),linear-gradient(90deg,${t.gridColor} 1px,transparent 1px)`,backgroundSize:"60px 60px",pointerEvents:"none"}}/>
+    <div style={{maxWidth:620,width:"100%"}}>
+      <div style={{display:"inline-flex",alignItems:"center",gap:"0.55rem",fontFamily:"'DM Mono',monospace",fontSize:"0.67rem",color:t.accent,letterSpacing:"0.15em",textTransform:"uppercase",background:t.accent2,border:`1px solid ${t.accent}33`,padding:"0.38rem 0.9rem",borderRadius:2,marginBottom:"1.6rem",animation:"fadeUp 0.5s ease both"}}>
+        <span style={{width:6,height:6,background:t.green,borderRadius:"50%",animation:"pulse 2s infinite",flexShrink:0}}/>Open to opportunities
+      </div>
+      <h1 style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:"clamp(2.6rem,7vw,5rem)",lineHeight:1.0,letterSpacing:"-0.02em",color:t.text,animation:"fadeUp 0.5s 0.08s ease both"}}>
+        <span style={{color:t.accent}}>Sanan</span> Shaikh
+        <span style={{display:"block",color:t.muted,fontWeight:400,fontSize:"0.45em",marginTop:"0.3em",letterSpacing:"0.01em",minHeight:"1.4em"}}>
+          {typed}<span style={{animation:"blink 1s infinite",color:t.accent}}>|</span>
+        </span>
+      </h1>
+      <p style={{marginTop:"1.5rem",fontSize:"0.94rem",lineHeight:1.9,color:t.muted,maxWidth:500,animation:"fadeUp 0.5s 0.16s ease both"}}>Building data-driven solutions through machine learning, predictive modeling, and exploratory analytics. Turning raw data into decisions that matter.</p>
+      <div style={{display:"flex",flexWrap:"wrap",gap:"0.8rem",marginTop:"2rem",animation:"fadeUp 0.5s 0.24s ease both"}}>
+        <button onClick={()=>document.getElementById("projects")?.scrollIntoView({behavior:"smooth"})}
+          onMouseEnter={e=>{e.currentTarget.style.boxShadow=`0 0 30px ${t.accent}66`;e.currentTarget.style.transform="translateY(-2px)";}}
+          onMouseLeave={e=>{e.currentTarget.style.boxShadow="none";e.currentTarget.style.transform="translateY(0)";}}
+          style={{background:t.accent,color:"#07090e",fontFamily:"'DM Mono',monospace",fontSize:"0.7rem",letterSpacing:"0.1em",textTransform:"uppercase",padding:"0.82rem 1.5rem",borderRadius:2,border:"none",cursor:"pointer",transition:"all 0.2s"}}>View Projects ↓</button>
+        <a href="mailto:shaikhsanan.04@gmail.com"
+          onMouseEnter={e=>{e.currentTarget.style.borderColor=t.accent;e.currentTarget.style.color=t.accent;e.currentTarget.style.transform="translateY(-2px)";}}
+          onMouseLeave={e=>{e.currentTarget.style.borderColor=t.border;e.currentTarget.style.color=t.text;e.currentTarget.style.transform="translateY(0)";}}
+          style={{display:"inline-flex",alignItems:"center",background:"transparent",color:t.text,fontFamily:"'DM Mono',monospace",fontSize:"0.7rem",letterSpacing:"0.1em",textTransform:"uppercase",padding:"0.82rem 1.5rem",borderRadius:2,border:`1px solid ${t.border}`,textDecoration:"none",transition:"all 0.2s"}}>Get in Touch →</a>
+      </div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:"2rem",marginTop:"3rem",paddingTop:"2rem",borderTop:`1px solid ${t.border}`,animation:"fadeUp 0.5s 0.32s ease both"}}>
+        {[["4+","ML Projects"],["3+","Yrs Experience"],["35%","Lead Conv. ↑"]].map(([n,l])=>(
+          <div key={l}><div style={{fontFamily:"'Syne',sans-serif",fontSize:"1.9rem",fontWeight:800,color:t.accent,lineHeight:1}}>{n}</div><div style={{fontFamily:"'DM Mono',monospace",fontSize:"0.6rem",color:t.muted,letterSpacing:"0.1em",textTransform:"uppercase",marginTop:"0.3rem"}}>{l}</div></div>
+        ))}
+      </div>
+    </div>
+    <div className="hero-orb" style={{position:"absolute",right:"clamp(2rem,6vw,5rem)",top:"50%",transform:"translateY(-50%)",width:320,height:320,animation:"fadeUp 0.8s 0.2s ease both",pointerEvents:"none"}}>
+      <div style={{position:"absolute",inset:0,borderRadius:"50%",background:`radial-gradient(circle at 40% 40%,${t.accent2},transparent 70%)`,border:`1px solid ${t.accent}1a`,animation:"spin 22s linear infinite"}}>
+        <div style={{position:"absolute",top:18,left:18,right:18,bottom:18,borderRadius:"50%",border:`1px dashed ${t.accent}11`,animation:"spinr 16s linear infinite"}}/>
+      </div>
+      <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:130,height:130,borderRadius:"50%",background:`radial-gradient(circle,${t.accent2} 0%,transparent 70%)`}}/>
+      {floats.map((txt,i)=><div key={i} style={{position:"absolute",...pos[i],fontFamily:"'DM Mono',monospace",fontSize:"0.6rem",color:t.accent,background:t.card,border:`1px solid ${t.border}`,padding:"0.35rem 0.65rem",borderRadius:4,whiteSpace:"nowrap",animation:`floatY ${3.5+i*0.4}s ease-in-out ${i*0.5}s infinite`}}>{txt}</div>)}
+    </div>
+  </section>;
+}
+
+function SkillCard({icon,title,tags,level,delay,t}){
+  const[r,v]=useInView();const[hov,setHov]=useState(false);
+  return <div ref={r} onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} style={{background:hov?t.bg2:t.card,border:`1px solid ${hov?t.accent+"4d":t.border}`,borderRadius:8,padding:"1.6rem",opacity:v?1:0,transform:v?(hov?"translateY(-5px)":"translateY(0)"):"translateY(22px)",transition:`opacity 0.6s ${delay}ms ease,transform 0.3s ease,border-color 0.3s,box-shadow 0.3s`,boxShadow:hov?`0 18px 36px ${t.shadow}`:"none",position:"relative",overflow:"hidden"}}>
+    <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${t.accent},transparent)`,opacity:hov?1:0,transition:"opacity 0.3s"}}/>
+    <div style={{fontSize:"1.3rem",marginBottom:"0.8rem"}}>{icon}</div>
+    <div style={{fontFamily:"'Syne',sans-serif",fontSize:"0.78rem",fontWeight:700,color:t.accent,letterSpacing:"0.06em",textTransform:"uppercase",marginBottom:"0.8rem"}}>{title}</div>
+    <div style={{display:"flex",flexWrap:"wrap",gap:"0.35rem",marginBottom:"1rem"}}>
+      {tags.map(tag=><span key={tag} style={{fontFamily:"'DM Mono',monospace",fontSize:"0.6rem",color:hov?t.text:t.muted,background:t.bg,border:`1px solid ${hov?t.muted2:t.border}`,padding:"0.2rem 0.5rem",borderRadius:2,transition:"all 0.2s"}}>{tag}</span>)}
+    </div>
+    <div>
+      <div style={{display:"flex",justifyContent:"space-between",marginBottom:"0.3rem"}}>
+        <span style={{fontFamily:"'DM Mono',monospace",fontSize:"0.58rem",color:t.muted,letterSpacing:"0.08em"}}>PROFICIENCY</span>
+        <span style={{fontFamily:"'DM Mono',monospace",fontSize:"0.58rem",color:t.accent}}>{level}%</span>
+      </div>
+      <div style={{height:3,background:t.border,borderRadius:2,overflow:"hidden"}}>
+        <div style={{height:"100%",borderRadius:2,background:`linear-gradient(90deg,${t.accent},${t.green})`,width:v?`${level}%`:"0%",transition:"width 1.2s cubic-bezier(0.4,0,0.2,1) 0.3s"}}/>
+      </div>
+    </div>
+  </div>;
+}
+
+function Skills({t}){
+  return <section id="skills" style={{padding:"6rem clamp(1.2rem,5vw,4rem)",maxWidth:1200,margin:"0 auto",position:"relative",zIndex:1}}>
+    <SectionLabel num="01" text="Skills" t={t}/>
+    <SectionTitle t={t}>Technical <span style={{color:t.accent}}>Arsenal</span></SectionTitle>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:"1.1rem"}}>
+      {skillsData.map((s,i)=><SkillCard key={s.title} {...s} delay={i*60} t={t}/>)}
+    </div>
+  </section>;
+}
+
+function ExpItem({title,company,location,dates,bullets,delay,t}){
+  const[r,v]=useInView();const[hov,setHov]=useState(false);
+  return <div ref={r} onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} style={{position:"relative",marginBottom:"1.3rem",padding:"1.8rem",background:hov?t.bg2:t.card,border:`1px solid ${hov?t.accent+"40":t.border}`,borderRadius:8,opacity:v?1:0,transform:v?"translateX(0)":"translateX(-18px)",transition:`opacity 0.6s ${delay}ms,transform 0.6s ${delay}ms,border-color 0.3s,box-shadow 0.3s`,boxShadow:hov?`0 10px 28px ${t.shadow}`:"none"}}>
+    <div style={{position:"absolute",left:"-2.4rem",top:"2rem",width:9,height:9,background:t.accent,borderRadius:"50%",boxShadow:`0 0 12px ${t.accent}`}}/>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:"0.5rem",marginBottom:"0.4rem"}}>
+      <div style={{fontFamily:"'Syne',sans-serif",fontSize:"1rem",fontWeight:700,color:t.text}}>{title}</div>
+      <div style={{fontFamily:"'DM Mono',monospace",fontSize:"0.64rem",color:t.accent,background:t.accent2,border:`1px solid ${t.accent}33`,padding:"0.2rem 0.6rem",borderRadius:2,whiteSpace:"nowrap"}}>{dates}</div>
+    </div>
+    <div style={{fontFamily:"'DM Mono',monospace",fontSize:"0.7rem",color:t.muted,marginBottom:"1rem"}}><span style={{color:t.accent}}>{company}</span> · {location}</div>
+    <ul style={{listStyle:"none"}}>
+      {bullets.map((b,i)=><li key={i} style={{fontSize:"0.84rem",color:t.muted,lineHeight:1.75,padding:"0.22rem 0 0.22rem 1rem",position:"relative"}}><span style={{position:"absolute",left:0,color:t.accent,fontSize:"0.52rem",top:"0.52rem"}}>▸</span><span dangerouslySetInnerHTML={{__html:b}}/></li>)}
+    </ul>
+  </div>;
+}
+
+function Experience({t}){
+  return <section id="experience" style={{padding:"6rem clamp(1.2rem,5vw,4rem)",background:`linear-gradient(180deg,transparent,${t.accent2},transparent)`,position:"relative",zIndex:1}}>
+    <div style={{maxWidth:1200,margin:"0 auto"}}>
+      <SectionLabel num="02" text="Experience" t={t}/>
+      <SectionTitle t={t}>Work <span style={{color:t.accent}}>History</span></SectionTitle>
+      <div style={{position:"relative",paddingLeft:"2rem"}}>
+        <div style={{position:"absolute",left:0,top:0,bottom:0,width:1,background:`linear-gradient(to bottom,${t.accent},transparent)`,opacity:0.3}}/>
+        {expData.map((e,i)=><ExpItem key={e.title} {...e} delay={i*100} t={t}/>)}
+      </div>
+    </div>
+  </section>;
+}
+
+function ProjectCard({num,title,tech,desc,badge,isAccent,delay,t}){
+  const[r,v]=useInView();const[hov,setHov]=useState(false);
+  const color=isAccent?t.accent:t.green;
+  return <div ref={r} onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} style={{background:t.card,border:`1px solid ${hov?t.accent+"48":t.border}`,borderRadius:8,padding:"1.8rem",display:"flex",flexDirection:"column",opacity:v?1:0,transform:v?(hov?"translateY(-6px)":"translateY(0)"):"translateY(26px)",transition:`opacity 0.6s ${delay}ms ease,transform 0.3s ease,border-color 0.3s,box-shadow 0.3s`,boxShadow:hov?`0 22px 44px ${t.shadow}`:"none",position:"relative",overflow:"hidden"}}>
+    <div style={{position:"absolute",bottom:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${color},transparent)`,transform:hov?"scaleX(1)":"scaleX(0)",transformOrigin:"left",transition:"transform 0.4s ease"}}/>
+    <div style={{fontFamily:"'Syne',sans-serif",fontSize:"2.6rem",fontWeight:800,color:t.accent+"10",lineHeight:1,marginBottom:"0.3rem"}}>{num}</div>
+    <div style={{fontFamily:"'Syne',sans-serif",fontSize:"0.98rem",fontWeight:700,color:t.text,marginBottom:"0.4rem"}}>{title}</div>
+    <div style={{fontFamily:"'DM Mono',monospace",fontSize:"0.6rem",color:t.accent,marginBottom:"0.9rem"}}>{tech}</div>
+    <div style={{fontSize:"0.83rem",color:t.muted,lineHeight:1.75,flex:1}}>{desc}</div>
+    <div style={{display:"inline-block",marginTop:"1.1rem",fontFamily:"'DM Mono',monospace",fontSize:"0.64rem",color,background:`${color}14`,border:`1px solid ${color}33`,padding:"0.25rem 0.6rem",borderRadius:2}}>{badge}</div>
+  </div>;
+}
+
+function Projects({t}){
+  const[filter,setFilter]=useState("All");
+  const filters=["All","ML","EDA"];
+  const filtered=filter==="All"?projectsData:projectsData.filter(p=>p.category===filter);
+  return <section id="projects" style={{padding:"6rem clamp(1.2rem,5vw,4rem)",maxWidth:1200,margin:"0 auto",position:"relative",zIndex:1}}>
+    <SectionLabel num="03" text="Projects" t={t}/>
+    <SectionTitle t={t}>Featured <span style={{color:t.accent}}>Work</span></SectionTitle>
+    <div style={{display:"flex",gap:"0.6rem",marginBottom:"2rem",flexWrap:"wrap"}}>
+      {filters.map(f=><button key={f} onClick={()=>setFilter(f)} style={{fontFamily:"'DM Mono',monospace",fontSize:"0.68rem",letterSpacing:"0.1em",textTransform:"uppercase",padding:"0.45rem 1.1rem",borderRadius:2,border:`1px solid ${filter===f?t.accent:t.border}`,background:filter===f?t.accent2:"transparent",color:filter===f?t.accent:t.muted,cursor:"pointer",transition:"all 0.2s"}}>{f}</button>)}
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:"1.1rem"}}>
+      {filtered.map((p,i)=><ProjectCard key={p.num} {...p} delay={i*80} t={t}/>)}
+    </div>
+  </section>;
+}
+
+function Contact({t}){
+  const[r,v]=useInView();
+  const links=[
+    {icon:"✉",label:"shaikhsanan.04@gmail.com",href:"mailto:shaikhsanan.04@gmail.com"},
+    {icon:"📱",label:"+91 70219 56965",href:"tel:+917021956965"},
+    {icon:"💼",label:"linkedin.com/in/shaikhsanan04",href:"https://www.linkedin.com/in/shaikhsanan04/"},
+    {icon:"⌥",label:"github.com/shaikhsanan04",href:"https://github.com/shaikhsanan04"},
+  ];
+  return <section id="contact" style={{padding:"6rem clamp(1.2rem,5vw,4rem)",maxWidth:1200,margin:"0 auto",position:"relative",zIndex:1}}>
+    <SectionLabel num="04" text="Contact" t={t}/>
+    <SectionTitle t={t}>Let's <span style={{color:t.accent}}>Connect</span></SectionTitle>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(270px,1fr))",gap:"2.5rem",alignItems:"start"}}>
+      <div ref={r} style={{opacity:v?1:0,transform:v?"translateY(0)":"translateY(22px)",transition:"all 0.6s"}}>
+        <p style={{fontSize:"0.93rem",color:t.muted,lineHeight:1.9,marginBottom:"1.8rem"}}>Actively seeking entry-level <span style={{color:t.text}}>Data Scientist</span>, <span style={{color:t.text}}>Data Analyst</span>, or <span style={{color:t.text}}>ML Engineer</span> roles. Open to remote &amp; on-site.</p>
+        <div style={{display:"flex",flexDirection:"column",gap:"0.7rem"}}>
+          {links.map(({icon,label,href})=><a key={href} href={href} target={href.startsWith("http")?"_blank":"_self"} rel="noreferrer"
+            onMouseEnter={e=>{e.currentTarget.style.borderColor=t.accent;e.currentTarget.style.color=t.accent;e.currentTarget.style.transform="translateX(5px)";}}
+            onMouseLeave={e=>{e.currentTarget.style.borderColor=t.border;e.currentTarget.style.color=t.text;e.currentTarget.style.transform="translateX(0)";}}
+            style={{display:"flex",alignItems:"center",gap:"0.9rem",fontFamily:"'DM Mono',monospace",fontSize:"0.74rem",color:t.text,textDecoration:"none",padding:"0.85rem 1rem",background:t.card,border:`1px solid ${t.border}`,borderRadius:6,transition:"all 0.2s"}}>
+            <span style={{fontSize:"0.95rem"}}>{icon}</span>{label}
+          </a>)}
+        </div>
+      </div>
+      <div style={{background:t.card,border:`1px solid ${t.border}`,borderRadius:8,padding:"1.8rem",opacity:v?1:0,transform:v?"translateY(0)":"translateY(22px)",transition:"all 0.6s 0.15s"}}>
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:"1.1rem",fontWeight:700,color:t.text,marginBottom:"1.1rem"}}>Certifications</div>
+        <div style={{display:"flex",flexDirection:"column",gap:"0.6rem",marginBottom:"1.8rem"}}>
+          {certsData.map(c=><div key={c} onMouseEnter={e=>e.currentTarget.style.borderColor=t.accent+"4d"} onMouseLeave={e=>e.currentTarget.style.borderColor=t.border}
+            style={{display:"flex",alignItems:"center",gap:"0.8rem",padding:"0.8rem 1rem",background:t.accent2,border:`1px solid ${t.border}`,borderRadius:6,fontSize:"0.83rem",color:t.text,transition:"border-color 0.2s"}}>
+            <span style={{width:6,height:6,borderRadius:"50%",background:t.accent,boxShadow:`0 0 8px ${t.accent}`,flexShrink:0}}/>{c}
+          </div>)}
+        </div>
+        <div style={{fontFamily:"'Syne',sans-serif",fontSize:"0.95rem",fontWeight:700,color:t.text,marginBottom:"0.8rem"}}>Education</div>
+        <div style={{padding:"1rem",background:t.accent2,border:`1px solid ${t.border}`,borderRadius:6}}>
+          <div style={{fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:"0.86rem",color:t.text}}>B.Sc. Information Technology</div>
+          <div style={{fontFamily:"'DM Mono',monospace",fontSize:"0.65rem",color:t.muted,marginTop:"0.25rem"}}>University of Mumbai · 2018 – 2021</div>
+        </div>
+      </div>
+    </div>
+  </section>;
+}
+
+function BackToTop({t}){
+  const[show,setShow]=useState(false);
+  useEffect(()=>{const h=()=>setShow(window.scrollY>400);window.addEventListener("scroll",h,{passive:true});return()=>window.removeEventListener("scroll",h);},[]);
+  return <button onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}
+    onMouseEnter={e=>{e.currentTarget.style.background=t.accent;e.currentTarget.style.color="#07090e";e.currentTarget.style.transform="translateY(-3px)";}}
+    onMouseLeave={e=>{e.currentTarget.style.background=t.card;e.currentTarget.style.color=t.accent;e.currentTarget.style.transform="translateY(0)";}}
+    style={{position:"fixed",bottom:"2rem",right:"2rem",zIndex:400,width:44,height:44,borderRadius:"50%",background:t.card,color:t.accent,border:`1px solid ${t.accent}`,fontSize:"1.1rem",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all 0.3s",opacity:show?1:0,pointerEvents:show?"auto":"none",transform:show?"translateY(0)":"translateY(10px)",boxShadow:`0 4px 20px ${t.shadow}`}}>↑</button>;
+}
+
+function Footer({t}){
+  return <footer style={{position:"relative",zIndex:1,borderTop:`1px solid ${t.border}`,padding:"1.6rem clamp(1.2rem,5vw,4rem)",display:"flex",flexWrap:"wrap",justifyContent:"space-between",alignItems:"center",gap:"0.5rem"}}>
+    <div style={{fontFamily:"'DM Mono',monospace",fontSize:"0.66rem",color:t.muted}}>© 2025 <span style={{color:t.accent}}>Sanan Shaikh</span>. Built with passion.</div>
+    <div style={{fontFamily:"'DM Mono',monospace",fontSize:"0.66rem",color:t.muted}}>Data Scientist · Sawantwadi, India</div>
+  </footer>;
+}
+
+function App(){
+  const[dark,setDark]=useState(true);
+  const t=dark?T.dark:T.light;
+  useEffect(()=>{document.body.className=dark?"dark":"light";const cleanup=initParticles(dark);return cleanup;},[dark]);
+  return <>
+    <Nav t={t} dark={dark} setDark={setDark}/>
+    <Hero t={t}/>
+    <Skills t={t}/>
+    <Experience t={t}/>
+    <Projects t={t}/>
+    <Contact t={t}/>
+    <Footer t={t}/>
+    <BackToTop t={t}/>
+  </>;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
