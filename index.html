@@ -124,6 +124,36 @@ nav, #root > * { position: relative; z-index: 2; }
 @media (max-width: 640px) { .hide-mobile { display: none !important; } }
 @media (min-width: 641px) { .hide-desktop { display: none !important; } }
 @media (max-width: 900px) { .hide-lg { display: none !important; } }
+
+/* ── RESPONSIVE FIXES ── */
+
+/* Hero grid → single column on mobile */
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Experience → single column on mobile */
+@media (max-width: 640px) {
+  .exp-grid { grid-template-columns: 1fr !important; gap: 0.6rem !important; }
+  .exp-left { text-align: left !important; padding-top: 0 !important; border-left: 2px solid var(--accent); padding-left: 0.8rem !important; }
+}
+
+/* Stats → 2x2 on mobile */
+@media (max-width: 480px) {
+  .stats-row { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.6rem !important; }
+  .stat-card { min-width: unset !important; }
+}
+
+/* Resume button — show on tablet/mobile in nav as icon only */
+@media (max-width: 900px) and (min-width: 641px) {
+  .resume-btn-text { display: none; }
+  .resume-btn-icon { display: inline !important; }
+}
+
+/* Section padding tighter on mobile */
+@media (max-width: 640px) {
+  .section-pad { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+}
 </style>
 </head>
 <body>
@@ -171,7 +201,7 @@ const PROJECTS = [
 ];
 
 const SKILLS = [
-  { icon:"⬡", label:"Languages & Libraries", items:["Python","SQL","Pandas","NumPy","Matplotlib","Seaborn","Scikit-learn"] },
+  { icon:"⬡", label:"Languages & Libraries", items:["Python","SQL","Pandas","NumPy","Matplotlib","Seaborn","Scikit-learn","Requests","BeautifulSoup"] },
   { icon:"◈", label:"Machine Learning", items:["Regression","Classification","Clustering","Feature Engineering","Model Evaluation","EDA"] },
   { icon:"◎", label:"Data Science", items:["Predictive Modeling","Statistical Analysis","Data Cleaning","Data Visualization","ROC-AUC","Business Analytics"] },
   { icon:"⬢", label:"App Deployment", items:["Streamlit","Streamlit Cloud","ML App Building","Interactive Dashboards"] },
@@ -479,10 +509,9 @@ function Nav() {
             }} />
           </button>
 
-          {/* Resume - direct PDF download */}
+          {/* Resume - works on all devices */}
           <a href="https://raw.githubusercontent.com/shaikhsanan04/sanan-shaikh-portfolio/main/Sanan_Shaikh_DataScientist_Resume.pdf"
             target="_blank" rel="noreferrer"
-            className="hide-mobile"
             style={{
               fontFamily: "'JetBrains Mono', monospace", fontSize: '0.65rem',
               letterSpacing: '0.1em', textTransform: 'uppercase',
@@ -530,7 +559,7 @@ function Nav() {
             letterSpacing: '-0.02em', transition: 'color 0.2s',
           }}>{label}</button>
         ))}
-        <a href="https://github.com/shaikhsanan04/shaikhsanan04.github.io/raw/main/Sanan_Shaikh_DataScientist_Resume.pdf"
+        <a href="https://raw.githubusercontent.com/shaikhsanan04/sanan-shaikh-portfolio/main/Sanan_Shaikh_DataScientist_Resume.pdf"
           target="_blank" rel="noreferrer" style={{
           marginTop: '1rem', fontFamily: "'JetBrains Mono', monospace", fontSize: '0.8rem',
           color: 'var(--bg)', background: 'var(--accent)', padding: '0.7rem 2rem',
@@ -547,7 +576,7 @@ function Nav() {
 function StatCard({ num, suffix, label, trigger }) {
   const val = useCountUp(num, trigger);
   return (
-    <div style={{ padding: '1.2rem 1.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, minWidth: 110 }}>
+    <div className="stat-card" style={{ padding: '1.2rem 1.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, minWidth: 110 }}>
       <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '2rem', color: 'var(--accent)', lineHeight: 1 }}>
         {val}{suffix}
       </div>
@@ -562,7 +591,7 @@ function Hero() {
 
   return (
     <section id="about" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', padding: '7rem clamp(1.2rem,6vw,5rem) 4rem', maxWidth: 1280, margin: '0 auto' }}>
-      <div style={{ width: '100%', display: 'grid', gridTemplateColumns: '1fr auto', gap: '4rem', alignItems: 'center' }}>
+      <div className="hero-grid" style={{ width: '100%', display: 'grid', gridTemplateColumns: '1fr auto', gap: '4rem', alignItems: 'center' }}>
         <div>
           {/* Status pill */}
           <div style={{ animation: 'fadeUp 0.5s ease both', display: 'inline-flex', alignItems: 'center', gap: '0.55rem', background: 'var(--surface)', border: '1px solid var(--border)', padding: '0.38rem 1rem 0.38rem 0.6rem', borderRadius: 999, marginBottom: '2.2rem' }}>
@@ -595,7 +624,7 @@ function Hero() {
           </div>
 
           {/* Stats */}
-          <div ref={statsRef} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem', animation: 'fadeUp 0.5s 0.35s ease both' }}>
+          <div ref={statsRef} className="stats-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem', animation: 'fadeUp 0.5s 0.35s ease both' }}>
             <StatCard num={5} suffix="+" label="Projects Built" trigger={statsVis} />
             <StatCard num={3} suffix="+" label="Yrs Experience" trigger={statsVis} />
             <StatCard num={3} suffix="" label="Live ML Apps" trigger={statsVis} />
@@ -670,7 +699,7 @@ function SkillCard({ icon, label, items, delay }) {
 
 function Skills() {
   return (
-    <section id="skills" style={{ padding: '7rem clamp(1.2rem,6vw,5rem)', maxWidth: 1280, margin: '0 auto' }}>
+    <section id="skills" className="section-pad" style={{ padding: '7rem clamp(1.2rem,6vw,5rem)', maxWidth: 1280, margin: '0 auto' }}>
       <SectionEyebrow num="01" label="Skills" />
       <SectionHeading>My Technical <span style={{ color: 'var(--accent)' }}>Stack</span></SectionHeading>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
@@ -687,9 +716,9 @@ function ExpCard({ role, co, loc, period, points, delay, isLast }) {
   const [ref, vis] = useInView();
   const [hov, setHov] = useState(false);
   return (
-    <div ref={ref} style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '2rem', marginBottom: isLast ? 0 : '2rem', opacity: vis ? 1 : 0, transform: vis ? 'none' : 'translateY(20px)', transition: `opacity 0.65s ${delay}s ease, transform 0.65s ${delay}s ease` }}>
+    <div ref={ref} className="exp-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 3fr', gap: '2rem', marginBottom: isLast ? 0 : '2rem', opacity: vis ? 1 : 0, transform: vis ? 'none' : 'translateY(20px)', transition: `opacity 0.65s ${delay}s ease, transform 0.65s ${delay}s ease` }}>
       {/* Left */}
-      <div style={{ textAlign: 'right', paddingTop: '0.1rem' }}>
+      <div className="exp-left" style={{ textAlign: 'right', paddingTop: '0.1rem' }}>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.65rem', color: 'var(--accent)', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>{period}</div>
         <div style={{ fontSize: '0.82rem', color: 'var(--text)', fontWeight: 600 }}>{co}</div>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem', color: 'var(--text3)', marginTop: '0.2rem' }}>{loc}</div>
@@ -802,7 +831,7 @@ function Projects() {
   const [filter, setFilter] = useState('All');
   const filtered = filter === 'All' ? PROJECTS : PROJECTS.filter(p => p.category === filter);
   return (
-    <section id="projects" style={{ padding: '7rem clamp(1.2rem,6vw,5rem)', maxWidth: 1280, margin: '0 auto' }}>
+    <section id="projects" className="section-pad" style={{ padding: '7rem clamp(1.2rem,6vw,5rem)', maxWidth: 1280, margin: '0 auto' }}>
       <SectionEyebrow num="03" label="Projects" />
       <SectionHeading>Featured <span style={{ color: 'var(--accent)' }}>Work</span></SectionHeading>
 
@@ -856,7 +885,7 @@ function ContactLink({ icon, label, href }) {
 function Contact() {
   const CERTS = ['Data Science Certification','Python for Machine Learning','Front End Development','AI Tools & ChatGPT Workshop'];
   return (
-    <section id="contact" style={{ padding: '7rem clamp(1.2rem,6vw,5rem)', background: 'linear-gradient(180deg, transparent, var(--surface2) 60%, transparent)' }}>
+    <section id="contact" className="section-pad" style={{ padding: '7rem clamp(1.2rem,6vw,5rem)', background: 'linear-gradient(180deg, transparent, var(--surface2) 60%, transparent)' }}>
       <div style={{ maxWidth: 1000, margin: '0 auto' }}>
         <SectionEyebrow num="04" label="Contact" />
         <SectionHeading>Let's <span style={{ color: 'var(--accent)' }}>Connect</span></SectionHeading>
