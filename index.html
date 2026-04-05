@@ -198,6 +198,12 @@ const PROJECTS = [
     badge:"Production-Ready SQL", badgeColor:"orange",
     live:null,
     github:"https://github.com/shaikhsanan04/crime-sql-data-cleaning" },
+  { id:6, num:"06", title:"Customer Churn Dashboard", category:"BI",
+    desc:"Interactive Power BI dashboard analyzing telecom customer churn — visualizing churn drivers, customer segments, and retention insights from the Telco dataset.",
+    tech:["Power BI","DAX","Data Modeling","Data Visualization"],
+    badge:"Power BI Dashboard", badgeColor:"orange",
+    live:null,
+    github:"https://github.com/shaikhsanan04/customer-churn-dashboard-power-bi" },
 ];
 
 const SKILLS = [
@@ -206,6 +212,8 @@ const SKILLS = [
   { icon:"◎", label:"Data Science", items:["Predictive Modeling","Statistical Analysis","Data Cleaning","Data Visualization","ROC-AUC","Business Analytics"] },
   { icon:"⬢", label:"App Deployment", items:["Streamlit","Streamlit Cloud","ML App Building","Interactive Dashboards"] },
   { icon:"◇", label:"Databases", items:["MySQL","MySQL Workbench","SQL Data Cleaning","Joins","Aggregation","Window Functions"] },
+  { icon:"▣", label:"Business Intelligence", items:["Power BI","DAX","Data Modeling","Dashboard Design"] },
+  { icon:"☁", label:"Cloud Platforms", items:["GCP (BigQuery)","GCP (Cloud Storage)","AWS (S3)","Azure (Blob Storage)"] },
   { icon:"△", label:"Web & Tools", items:["React.js","HTML/CSS","JavaScript","Git","GitHub","VS Code","Figma"] },
 ];
 
@@ -761,7 +769,7 @@ function Experience() {
 /* ══════════════════════════════════════════
    PROJECTS
 ══════════════════════════════════════════ */
-const FILTERS = ['All', 'ML', 'EDA', 'SQL'];
+const FILTERS = ['All', 'ML', 'EDA', 'SQL', 'BI'];
 
 function ProjectCard({ project, delay }) {
   const [ref, vis] = useInView();
