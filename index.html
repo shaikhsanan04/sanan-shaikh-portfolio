@@ -173,19 +173,19 @@ const PROJECTS = [
     tech:["Python","Scikit-learn","Pandas","Matplotlib"],
     badge:"ROC-AUC Evaluated", badgeColor:"accent",
     live:"https://customer-churn-prediction-app-ready-to-use.streamlit.app/",
-    github:null },
+    github:"https://github.com/shaikhsanan04/customer-churn-prediction" },
   { id:2, num:"02", title:"Mall Customer Segmentation", category:"ML",
     desc:"Applied KMeans + Hierarchical Clustering on 200-customer dataset. Validated K=5 via Elbow Method & Silhouette Score (0.5547). 5 actionable business segments.",
     tech:["Python","KMeans","SciPy","Seaborn"],
     badge:"Silhouette: 0.5547", badgeColor:"green",
     live:"https://mall-customer-segmentation-ml.streamlit.app/",
-    github:null },
+    github:"https://github.com/shaikhsanan04/mall-customer-segmentation" },
   { id:3, num:"03", title:"Ecommerce Sales Forecasting", category:"ML",
     desc:"Benchmarked 4 regression models for revenue forecasting. Engineered 3 time-based features for seasonal patterns. Evaluated via MAE, RMSE & R².",
     tech:["Python","Scikit-learn","Feature Eng.","Regression"],
     badge:"4 Models Benchmarked", badgeColor:"accent",
     live:"https://ecommerce-sales-forecasting.streamlit.app/",
-    github:null },
+    github:"https://github.com/shaikhsanan04/ecommerce-sales-forecasting" },
   { id:4, num:"04", title:"Walmart Sales EDA", category:"EDA",
     desc:"Comprehensive EDA on 45 stores × 3 years of weekly data. 10+ visualizations revealing seasonal trends, holiday impacts & store performance variance.",
     tech:["Python","Pandas","NumPy","Seaborn"],
@@ -204,6 +204,12 @@ const PROJECTS = [
     badge:"Power BI Dashboard", badgeColor:"orange",
     live:null,
     github:"https://github.com/shaikhsanan04/customer-churn-dashboard-power-bi" },
+  { id:7, num:"07", title:"HR Analytics Dashboard", category:"BI",
+    desc:"4-page Power BI dashboard analyzing employee attrition across 1,470 employees. Identified overtime as a 2.3x attrition driver. Features drill-through, RLS-ready model, DAX measures, and satisfaction heatmap.",
+    tech:["Power BI","DAX","Power Query","Star Schema"],
+    badge:"16.1% Attrition Insight", badgeColor:"orange",
+    live:null,
+    github:"https://github.com/shaikhsanan04/hr-analytics-powerbi-dashbaord" },
 ];
 
 const SKILLS = [
@@ -212,7 +218,7 @@ const SKILLS = [
   { icon:"◎", label:"Data Science", items:["Predictive Modeling","Statistical Analysis","Data Cleaning","Data Visualization","ROC-AUC","Business Analytics"] },
   { icon:"⬢", label:"App Deployment", items:["Streamlit","Streamlit Cloud","ML App Building","Interactive Dashboards"] },
   { icon:"◇", label:"Databases", items:["MySQL","MySQL Workbench","SQL Data Cleaning","Joins","Aggregation","Window Functions"] },
-  { icon:"▣", label:"Business Intelligence", items:["Power BI","DAX","Data Modeling","Dashboard Design"] },
+  { icon:"▣", label:"Business Intelligence", items:["Power BI","DAX","Star Schema","Data Modeling","Dashboard Design","MS Excel"] },
   { icon:"☁", label:"Cloud Platforms", items:["GCP (BigQuery)","GCP (Cloud Storage)","AWS (S3)","Azure (Blob Storage)"] },
   { icon:"△", label:"Web & Tools", items:["React.js","HTML/CSS","JavaScript","Git","GitHub","VS Code","Figma"] },
 ];
@@ -622,7 +628,7 @@ function Hero() {
 
           {/* Bio */}
           <p style={{ fontSize: '1rem', color: 'var(--text2)', lineHeight: 1.85, maxWidth: 540, marginBottom: '2.2rem', animation: 'fadeUp 0.5s 0.21s ease both' }}>
-            Building data-driven solutions through machine learning, SQL analytics & interactive Streamlit apps. Based in Sawantwadi, Maharashtra — open to remote & on-site roles.
+            Data Scientist with hands-on experience building end-to-end ML pipelines, deploying live Streamlit apps, and creating interactive Power BI dashboards. Skilled in EDA, predictive modeling, statistical analysis, and BI reporting. Based in Sawantwadi, Maharashtra — open to remote &amp; on-site roles.
           </p>
 
           {/* CTAs */}
@@ -633,7 +639,7 @@ function Hero() {
 
           {/* Stats */}
           <div ref={statsRef} className="stats-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem', animation: 'fadeUp 0.5s 0.35s ease both' }}>
-            <StatCard num={5} suffix="+" label="Projects Built" trigger={statsVis} />
+            <StatCard num={7} suffix="+" label="Projects Built" trigger={statsVis} />
             <StatCard num={3} suffix="+" label="Yrs Experience" trigger={statsVis} />
             <StatCard num={3} suffix="" label="Live ML Apps" trigger={statsVis} />
             <StatCard num={35} suffix="%" label="Lead Conv. ↑" trigger={statsVis} />
@@ -891,7 +897,7 @@ function ContactLink({ icon, label, href }) {
 }
 
 function Contact() {
-  const CERTS = ['Data Science Certification','Python for Machine Learning','Front End Development','AI Tools & ChatGPT Workshop'];
+  const CERTS = ['Data Science — CodeWithHarry','Python for Machine Learning — Great Learning','AI Tools & ChatGPT Workshop — Be10x'];
   return (
     <section id="contact" className="section-pad" style={{ padding: '7rem clamp(1.2rem,6vw,5rem)', background: 'linear-gradient(180deg, transparent, var(--surface2) 60%, transparent)' }}>
       <div style={{ maxWidth: 1000, margin: '0 auto' }}>
@@ -902,7 +908,7 @@ function Contact() {
           {/* Left */}
           <Reveal>
             <p style={{ fontSize: '0.95rem', color: 'var(--text2)', lineHeight: 1.9, marginBottom: '1.8rem' }}>
-              Actively seeking entry-level <strong style={{ color: 'var(--text)' }}>Data Scientist</strong>, <strong style={{ color: 'var(--text)' }}>Data Analyst</strong>, or <strong style={{ color: 'var(--text)' }}>ML Engineer</strong> roles. Open to remote &amp; on-site.
+              Actively seeking entry-level <strong style={{ color: 'var(--text)' }}>Data Scientist</strong>, <strong style={{ color: 'var(--text)' }}>Data Analyst</strong>, <strong style={{ color: 'var(--text)' }}>Business Analyst</strong>, or <strong style={{ color: 'var(--text)' }}>ML Engineer</strong> roles. Open to remote &amp; on-site.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
               <ContactLink icon="✉" label="shaikhsanan.04@gmail.com" href="mailto:shaikhsanan.04@gmail.com" />
