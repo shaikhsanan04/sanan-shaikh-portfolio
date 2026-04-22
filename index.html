@@ -168,43 +168,49 @@ const { useState, useEffect, useRef, useCallback, createContext, useContext } = 
    DATA
 ══════════════════════════════════════════ */
 const PROJECTS = [
-  { id:1, num:"01", title:"Customer Churn Prediction", category:"ML",
+  { id:1, num:"01", title:"DocGPT — PDF Q&A RAG Pipeline", category:"RAG",
+    desc:"Local RAG pipeline that extracts, chunks, and embeds PDF content using Ollama (nomic-embed-text-v2-moe) stored in ChromaDB. Semantic search retrieves top-K chunks via cosine similarity; Gemini 2.5 Flash generates grounded answers.",
+    tech:["Python","ChromaDB","Ollama","Gemini API","LangChain","Streamlit"],
+    badge:"RAG · Vector Search", badgeColor:"green",
+    live:"https://docgpt-pdf-rag.streamlit.app/",
+    github:"https://github.com/shaikhsanan04/docGPT" },
+  { id:2, num:"02", title:"Customer Churn Prediction", category:"ML",
     desc:"Built 3+ classification models (Logistic Regression, Decision Tree, Random Forest) to predict telecom churn. Full pipeline from EDA to ROC-AUC evaluation.",
     tech:["Python","Scikit-learn","Pandas","Matplotlib"],
     badge:"ROC-AUC Evaluated", badgeColor:"accent",
     live:"https://customer-churn-prediction-app-ready-to-use.streamlit.app/",
     github:"https://github.com/shaikhsanan04/customer-churn-prediction" },
-  { id:2, num:"02", title:"Mall Customer Segmentation", category:"ML",
+  { id:3, num:"03", title:"Mall Customer Segmentation", category:"ML",
     desc:"Applied KMeans + Hierarchical Clustering on 200-customer dataset. Validated K=5 via Elbow Method & Silhouette Score (0.5547). 5 actionable business segments.",
     tech:["Python","KMeans","SciPy","Seaborn"],
     badge:"Silhouette: 0.5547", badgeColor:"green",
     live:"https://mall-customer-segmentation-ml.streamlit.app/",
-    github:"https://github.com/shaikhsanan04/mall-customer-segmentation" },
-  { id:3, num:"03", title:"Ecommerce Sales Forecasting", category:"ML",
+    github:"https://github.com/shaikhsanan04/mall-customer-segmentation-ml-project" },
+  { id:4, num:"04", title:"Ecommerce Sales Forecasting", category:"ML",
     desc:"Benchmarked 4 regression models for revenue forecasting. Engineered 3 time-based features for seasonal patterns. Evaluated via MAE, RMSE & R².",
     tech:["Python","Scikit-learn","Feature Eng.","Regression"],
     badge:"4 Models Benchmarked", badgeColor:"accent",
     live:"https://ecommerce-sales-forecasting.streamlit.app/",
     github:"https://github.com/shaikhsanan04/ecommerce-sales-forecasting" },
-  { id:4, num:"04", title:"Walmart Sales EDA", category:"EDA",
+  { id:5, num:"05", title:"Walmart Sales EDA", category:"EDA",
     desc:"Comprehensive EDA on 45 stores × 3 years of weekly data. 10+ visualizations revealing seasonal trends, holiday impacts & store performance variance.",
     tech:["Python","Pandas","NumPy","Seaborn"],
     badge:"45 Stores · 3 Yrs", badgeColor:"green",
     live:null,
     github:"https://github.com/shaikhsanan04/walmart-sales-eda" },
-  { id:5, num:"05", title:"Crime Data Cleaning (SQL)", category:"SQL",
+  { id:6, num:"06", title:"Crime Data Cleaning (SQL)", category:"SQL",
     desc:"Large-scale SQL data cleaning on real-world crime dataset using MySQL Workbench — handling nulls, duplicates, inconsistent formatting & structural issues.",
     tech:["MySQL","MySQL Workbench","Data Cleaning","SQL"],
     badge:"Production-Ready SQL", badgeColor:"orange",
     live:null,
     github:"https://github.com/shaikhsanan04/crime-sql-data-cleaning" },
-  { id:6, num:"06", title:"Customer Churn Dashboard", category:"BI",
+  { id:7, num:"07", title:"Customer Churn Dashboard", category:"BI",
     desc:"Interactive Power BI dashboard analyzing telecom customer churn — visualizing churn drivers, customer segments, and retention insights from the Telco dataset.",
     tech:["Power BI","DAX","Data Modeling","Data Visualization"],
     badge:"Power BI Dashboard", badgeColor:"orange",
     live:null,
     github:"https://github.com/shaikhsanan04/customer-churn-dashboard-power-bi" },
-  { id:7, num:"07", title:"HR Analytics Dashboard", category:"BI",
+  { id:8, num:"08", title:"HR Analytics Dashboard", category:"BI",
     desc:"4-page Power BI dashboard analyzing employee attrition across 1,470 employees. Identified overtime as a 2.3x attrition driver. Features drill-through, RLS-ready model, DAX measures, and satisfaction heatmap.",
     tech:["Power BI","DAX","Power Query","Star Schema"],
     badge:"16.1% Attrition Insight", badgeColor:"orange",
@@ -213,11 +219,12 @@ const PROJECTS = [
 ];
 
 const SKILLS = [
-  { icon:"⬡", label:"Languages & Libraries", items:["Python","SQL","Pandas","NumPy","Matplotlib","Seaborn","Scikit-learn","Requests","BeautifulSoup"] },
-  { icon:"◈", label:"Machine Learning", items:["Regression","Classification","Clustering","Feature Engineering","Model Evaluation","EDA"] },
+  { icon:"⬡", label:"Languages & Libraries", items:["Python","SQL","Pandas","NumPy","Matplotlib","Seaborn","Scikit-learn","LangChain","Requests","BeautifulSoup"] },
+  { icon:"◈", label:"Machine Learning", items:["Regression","Classification","Clustering","Feature Engineering","Model Evaluation","Scikit-learn Pipelines","TensorFlow","Keras"] },
   { icon:"◎", label:"Data Science", items:["Predictive Modeling","Statistical Analysis","Data Cleaning","Data Visualization","ROC-AUC","Business Analytics"] },
+  { icon:"✦", label:"AI & RAG", items:["Retrieval-Augmented Generation","Vector Embeddings","LLM Integration","Prompt Engineering","ChromaDB","Ollama"] },
   { icon:"⬢", label:"App Deployment", items:["Streamlit","Streamlit Cloud","ML App Building","Interactive Dashboards"] },
-  { icon:"◇", label:"Databases", items:["MySQL","MySQL Workbench","SQL Data Cleaning","Joins","Aggregation","Window Functions"] },
+  { icon:"◇", label:"Databases", items:["MySQL","MySQL Workbench","ChromaDB","SQL Data Cleaning","Joins","Aggregation","Window Functions"] },
   { icon:"▣", label:"Business Intelligence", items:["Power BI","DAX","Star Schema","Data Modeling","Dashboard Design","MS Excel"] },
   { icon:"☁", label:"Cloud Platforms", items:["GCP (BigQuery)","GCP (Cloud Storage)","AWS (S3)","Azure (Blob Storage)"] },
   { icon:"△", label:"Web & Tools", items:["React.js","HTML/CSS","JavaScript","Git","GitHub","VS Code","Figma"] },
@@ -628,7 +635,7 @@ function Hero() {
 
           {/* Bio */}
           <p style={{ fontSize: '1rem', color: 'var(--text2)', lineHeight: 1.85, maxWidth: 540, marginBottom: '2.2rem', animation: 'fadeUp 0.5s 0.21s ease both' }}>
-            Data Scientist with hands-on experience building end-to-end ML pipelines, deploying live Streamlit apps, and creating interactive Power BI dashboards. Skilled in EDA, predictive modeling, statistical analysis, and BI reporting. Based in Sawantwadi, Maharashtra — open to remote &amp; on-site roles.
+            Data Scientist with hands-on experience building end-to-end ML pipelines, RAG systems, and live Streamlit apps. Built DocGPT — a local PDF Q&A system using ChromaDB, Ollama &amp; Gemini. Skilled in EDA, predictive modeling, statistical analysis, LLM integration, and BI reporting. Based in Sawantwadi, Maharashtra — open to remote &amp; on-site roles.
           </p>
 
           {/* CTAs */}
@@ -639,9 +646,9 @@ function Hero() {
 
           {/* Stats */}
           <div ref={statsRef} className="stats-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem', animation: 'fadeUp 0.5s 0.35s ease both' }}>
-            <StatCard num={7} suffix="+" label="Projects Built" trigger={statsVis} />
+            <StatCard num={8} suffix="+" label="Projects Built" trigger={statsVis} />
             <StatCard num={3} suffix="+" label="Yrs Experience" trigger={statsVis} />
-            <StatCard num={3} suffix="" label="Live ML Apps" trigger={statsVis} />
+            <StatCard num={4} suffix="" label="Live ML Apps" trigger={statsVis} />
             <StatCard num={35} suffix="%" label="Lead Conv. ↑" trigger={statsVis} />
           </div>
         </div>
@@ -661,9 +668,9 @@ function Hero() {
                 ['','Sanan Shaikh','var(--green)',''],
                 ['>','skills --top','var(--text2)','var(--accent)'],
                 ['','Python, SQL, ML','var(--text)',''],
-                ['','Streamlit, React','var(--text)',''],
+                ['','Streamlit, RAG','var(--text)',''],
                 ['>','projects --count','var(--text2)','var(--accent)'],
-                ['','5 projects live','var(--green)',''],
+                ['','4 apps live','var(--green)',''],
                 ['>','status','var(--text2)','var(--accent)'],
                 ['','open_to_work ✓','var(--accent)',''],
               ].map(([prompt, text, tc, pc], i) => (
@@ -775,7 +782,7 @@ function Experience() {
 /* ══════════════════════════════════════════
    PROJECTS
 ══════════════════════════════════════════ */
-const FILTERS = ['All', 'ML', 'EDA', 'SQL', 'BI'];
+const FILTERS = ['All', 'RAG', 'ML', 'EDA', 'SQL', 'BI'];
 
 function ProjectCard({ project, delay }) {
   const [ref, vis] = useInView();
@@ -819,14 +826,6 @@ function ProjectCard({ project, delay }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.2rem' }}>
         <Tag color={badgeColor}>{badge}</Tag>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {live && (
-            <a href={live} target="_blank" rel="noreferrer"
-              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.62rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--accent)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem', padding: '0.3rem 0.65rem', border: '1px solid var(--accent)', borderRadius: '3px', transition: 'all 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = 'var(--bg)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--accent)'; }}>
-              ▶ Live
-            </a>
-          )}
           {github && (
             <a href={github} target="_blank" rel="noreferrer"
               style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.62rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text2)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem', padding: '0.3rem 0.65rem', border: '1px solid var(--border)', borderRadius: '3px', transition: 'all 0.2s' }}
